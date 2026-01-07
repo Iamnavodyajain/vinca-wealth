@@ -2,46 +2,59 @@
 
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
+import {
+  Home,
+  Calculator,
+  EyeOff,
+  BarChart3,
+  MessageCircle,
+  User,
+  Menu,
+  X,
+  ChevronRight
+} from 'lucide-react';
+import { usePremium } from '@/lib/premium';
 
 export default function DashboardSidebar() {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+  const { isPremium, upgradeToPremium } = usePremium();
 
   const features = [
     {
       id: 'financial-readiness',
       label: 'Financial Readiness',
       path: '/dashboard/financial-readiness',
-      icon: '📊'
+      icon: <Calculator size={20} />
     },
     {
       id: 'blind-spot',
-      label: 'Blind Spot',
+      label: 'Blind Spot Analysis',
       path: '/dashboard/blind-spot',
-      icon: '🔍'
+      icon: <EyeOff size={20} />
+    },
+    {
+      id: 'top-deals',
+      label: 'Top Assets Analysis',
+      path: '/dashboard/top-deals',
+      icon: <BarChart3 size={20} />
     },
     {
       id: 'talk-to-manager',
       label: 'Talk to Manager',
       path: '/dashboard/talk-to-manager',
-      icon: '💬'
-    },
-    {
-      id: 'top-deals',
-      label: 'Top Deals',
-      path: '/dashboard/top-deals',
-      icon: '⭐'
+      icon: <MessageCircle size={20} />
     }
   ];
 
   const isActive = (path) => {
-    return pathname === path;
+    return pathname === path || pathname?.startsWith(path + '/');
   };
 
   const handleNavigation = (path) => {
     router.push(path);
-    setIsMobileOpen(false); // Close mobile menu after navigation
+    setIsMobileOpen(false);
   };
 
   return (
@@ -49,15 +62,15 @@ export default function DashboardSidebar() {
       {/* Mobile Hamburger Button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-green-500 text-white rounded-lg shadow-lg"
+        className="lg:hidden fixed top-3 left-3 z-50 p-2 bg-green-600 text-white rounded-lg"
       >
-        {isMobileOpen ? '✕' : '☰'}
+        {isMobileOpen ? <X size={20} /> : <Menu size={20} />}
       </button>
 
       {/* Overlay for mobile */}
       {isMobileOpen && (
         <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          className="lg:hidden fixed inset-0 bg-black/40 z-40"
           onClick={() => setIsMobileOpen(false)}
         />
       )}
@@ -68,57 +81,70 @@ export default function DashboardSidebar() {
         h-screen
         transform transition-transform duration-300 ease-in-out
         ${isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        lg:w-auto
+        w-64 lg:w-72
       `}>
-        <div className="card h-full flex flex-col py-6 mr-2 rounded-none bg-white lg:bg-transparent shadow-lg lg:shadow-none">
+        <div className="h-full flex flex-col bg-white border-r border-slate-200">
           {/* Close button for mobile */}
-          <div className="lg:hidden flex justify-end px-4 mb-4">
+          <div className="lg:hidden flex justify-end p-4 border-b border-slate-200">
             <button
               onClick={() => setIsMobileOpen(false)}
-              className="p-2 text-slate-700 hover:bg-slate-100 rounded-full"
+              className="p-2 text-slate-700 hover:bg-slate-100 rounded-lg"
             >
-              ✕
+              <X size={20} />
             </button>
           </div>
 
-          <div className="px-4 mb-4">
+          
+
+          {/* User Profile */}
+          <div className="p-4 border-b border-slate-200">
             <button
               onClick={() => handleNavigation('/dashboard/profile')}
-              className={`w-full text-left px-3 py-3 rounded-lg transition-all duration-200 flex items-center space-x-3 ${
-                isActive('/dashboard/profile') ? 'bg-green-500 text-white font-medium' : 'text-slate-700 hover:bg-slate-100'
-              }`}
+              className={`w-full text-left px-3 py-3 rounded-lg transition-all flex items-center justify-between ${isActive('/dashboard/profile') ? 'bg-green-50 text-green-700 border border-green-200' : 'text-slate-700 hover:bg-slate-50'}`}
             >
-              <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-lg text-slate-700">👤</div>
-              <div>
-                <div className="text-sm font-medium">Your Profile</div>
-                <div className="text-xs text-slate-500">View account</div>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center">
+                  <User size={20} className="text-slate-600" />
+                </div>
+                <div>
+                  <div className="text-sm font-medium">Your Profile</div>
+                  <div className="text-xs text-slate-500">View account details</div>
+                </div>
               </div>
+              <ChevronRight size={16} className="text-slate-400" />
             </button>
           </div>
 
-          <div className="px-4 mb-4">
-            <h3 className="text-sm font-semibold text-slate-700">Features</h3>
+          {/* Features Section */}
+          <div className="flex-1 py-4">
+            <div className="px-4 mb-3">
+              <h3 className="text-xs font-medium text-slate-500 uppercase tracking-wider">TOOLS</h3>
+            </div>
+            <nav className="space-y-1 px-3">
+              {features.map((feature) => (
+                <button
+                  key={feature.id}
+                  onClick={() => handleNavigation(feature.path)}
+                  className={`w-full text-left px-3 py-3 rounded-lg transition-all flex items-center space-x-3 ${isActive(feature.path) ? 'bg-green-50 text-green-700 border border-green-200' : 'text-slate-700 hover:bg-slate-50 hover:text-green-600'}`}
+                >
+                  <div className={isActive(feature.path) ? 'text-green-600' : 'text-slate-500'}>
+                    {feature.icon}
+                  </div>
+                  <span className="text-sm">{feature.label}</span>
+                </button>
+              ))}
+            </nav>
           </div>
 
-          <nav className="space-y-2 px-2 flex-1">
-            {features.map((feature) => (
-              <button
-                key={feature.id}
-                onClick={() => handleNavigation(feature.path)}
-                className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center space-x-3 ${
-                  isActive(feature.path)
-                    ? 'bg-green-500 text-white font-medium'
-                    : 'text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                <span className="text-lg">{feature.icon}</span>
-                <span className="text-sm">{feature.label}</span>
-              </button>
-            ))}
-          </nav>
-
-          <div className="px-4 pt-4 border-t border-slate-200">
-            <p className="text-xs text-slate-500">v1.0</p>
+          {/* Dashboard Home Link */}
+          <div className="p-4 border-t border-slate-200">
+            <button
+              onClick={() => handleNavigation('/dashboard')}
+              className={`w-full text-left px-3 py-2.5 rounded-lg transition-all flex items-center space-x-3 ${isActive('/dashboard') && !isActive('/dashboard/profile') ? 'bg-slate-100 text-slate-900' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              <Home size={20} className="text-slate-500" />
+              <span className="text-sm">Dashboard Home</span>
+            </button>
           </div>
         </div>
       </div>

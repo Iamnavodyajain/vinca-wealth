@@ -62,3 +62,47 @@
     padding-left: 260px;
   }
 }
+/* Add these styles to your global CSS file */
+
+.card {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .card {
+    border-radius: 8px;
+  }
+}
+
+/* Chart tooltip styling */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-default-tooltip {
+  background-color: white !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  padding: 12px !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+}
+
+.recharts-tooltip-label {
+  color: #64748b !important;
+  font-weight: 500 !important;
+  font-size: 12px !important;
+}
+
+.recharts-tooltip-item {
+  color: #1e293b !important;
+  font-size: 14px !important;
+}
