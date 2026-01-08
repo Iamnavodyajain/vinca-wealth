@@ -11,7 +11,8 @@ import {
   User,
   Menu,
   X,
-  ChevronRight
+  ChevronRight,
+  HeartPulse
 } from 'lucide-react';
 import { usePremium } from '@/lib/premium';
 
@@ -33,6 +34,12 @@ export default function DashboardSidebar() {
       label: 'Blind Spot Analysis',
       path: '/dashboard/blind-spot',
       icon: <EyeOff size={20} />
+    },
+    {
+      id: 'health-stress',
+      label: 'Health Stress Test',
+      path: '/dashboard/health-stress',
+      icon: <HeartPulse size={20} />
     },
     {
       id: 'top-deals',
@@ -93,8 +100,6 @@ export default function DashboardSidebar() {
               <X size={20} />
             </button>
           </div>
-
-          
 
           {/* User Profile */}
           <div className="p-4 border-b border-slate-200">
